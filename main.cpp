@@ -3,8 +3,9 @@
 #include <SFML/Audio.hpp>
 
 
-
 int main(int argc, char **argv) {
-    std::cout << "Hello, world!" << std::endl;
+            
+    std::cout << "Zombie Arena!" << std::endl;
     return 0;
+    
 }
