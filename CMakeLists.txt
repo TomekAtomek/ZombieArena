@@ -6,9 +6,9 @@ set (Tutorial_VERSION_MAJOR 1)
 set (Tutorial_VERSION_MINOR 0)
 set (SFML_DIR /home/tomek/projects/SFML)
 set (SOURCES_DIR /home/tomek/projects/ZombieArena)
-set (SOURCE_FILES ${SOURCES_DIR}/main.cpp)
+set (SOURCE_FILES ${SOURCES_DIR}/main.cpp ${SOURCES_DIR}/Player.cpp)
 
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
 
 
 
