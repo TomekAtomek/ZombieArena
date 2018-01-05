@@ -1,10 +1,16 @@
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "Player.h"
+#include "ZombieArena.h"
+#include "TextureHolder.h"
+
 
 
 
 int main(int argc, char * argv[])
 {
+    TextureHolder textureHolder;
+    
     enum class State{PAUSED, PLAYING, LEVELING_UP, GAME_OVER};
     
     State state = State::GAME_OVER;
@@ -29,6 +35,18 @@ int main(int argc, char * argv[])
     Player player;
     
     sf::IntRect arena;
+    
+    sf::VertexArray background;
+    
+    sf::Texture textureBackground;
+    textureBackground.loadFromFile("graphics/background_sheet.png");
+    
+    //prepare the horde of Zombies
+    
+    int numZombies;
+    int numZombiesAlive;
+    Zombie * zombies = nullptr;
+    
     
     while(window.isOpen())
     {
@@ -130,11 +148,19 @@ int main(int argc, char * argv[])
                 arena.left = 0;
                 arena.top = 0;
                 
-                int tileSize = 50;
+                //int tileSize = 50;
+                
+                int tileSize = ZombieArena::createBackGround(background, arena);
                 
                 player.spawn(arena, resolution, tileSize);
                 
-                clock.restart();
+                numZombies = 10;
+                numZombiesAlive = numZombies;
+                
+                delete[] zombies;
+                zombies = ZombieArena::createHorde(numZombies,arena);
+                
+                clock.restart();//restart clock to avoid frame jump
             }
         }//end Leveling Up
         
@@ -159,6 +185,14 @@ int main(int argc, char * argv[])
             
             mainView.setCenter(playerPosition);
             
+            for (int i = 0; i < numZombies; ++i)
+            {
+                if(zombies[i].isAlive())
+                {
+                    zombies[i].update(dtAsSeconds, playerPosition);
+                }
+            }
+            
             
         }//end update the FRAME
         
@@ -169,13 +203,33 @@ int main(int argc, char * argv[])
             
             window.setView(mainView);
             
+            window.draw(background, &textureBackground);
+            
+            for (int i = 0; i < numZombies; ++i)
+            {
+                window.draw(zombies[i].getSprite());
+            }
+            
             window.draw(player.getSprite());
+            
         }
         
+        if(state == State::LEVELING_UP)
+        {
+        }
         
+        if(state == State::PAUSED)
+        {
+        }
+        
+        if(state == State::GAME_OVER)
+        {
+        }
         window.display();
         
     }// end game loop
+    
+    delete[] zombies;
     
     return 0;
 }
